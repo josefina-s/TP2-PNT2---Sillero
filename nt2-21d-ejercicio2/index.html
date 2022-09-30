@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ejemplo 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+
+</head>
+
+
+<div class="container-fluid mt-3" id="app">
+    <input type="text" class="form-control" v-model="criterioDeNombre"
+    placeholder="Ingresar un nombre...">
+    <div v-if="criterioDeNombre.length < 3" class="alert alert-danger mt-1">
+        Ingresar mas de 3 caracteres
+      </div>
+    <br>
+    <input type="text" class="form-control" v-model="criterioDeDni"
+    placeholder="Ingresar un dni...">
+    <br>
+    <div class="card-deck m-0">
+        <div class="row">
+            <div class="col" v-for="persona in personasFiltradas">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">dni {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            criterioDeNombre: '',
+            criterioDeDni: '',
+            
+            //Aquí, en este array es donde tienen que agregar su información
+            personas: [
+                {
+                    nombre: "Daniel",
+                    apellido: "Sanchez",
+                    correo: "danielsanchez68@hotmail.com",
+                    dni: "20442873"
+                },
+                {
+                    nombre: "Juan",
+                    apellido: "Perez",
+                    correo: "j@p",
+                    dni: "252525256"
+                },
+                {
+                    nombre: "Ana",
+                    apellido: "Suarez",
+                    correo: "a@s",
+                    dni: "312346346"
+                },
+                {
+                    nombre: "Josefina",
+                    apellido: "Sillero",
+                    correo: "j@s",
+                    dni: "42555991"
+                },
+                {
+                    nombre: "Ana",
+                    apellido: "Suarez",
+                    correo: "a@s",
+                    dni: "326346346"
+                },
+            ]
+
+        },
+        computed: {
+            personasFiltradas() {
+                return this.personas.filter((persona) => {
+                    let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
+                    let registroNombreApellido = `${persona.nombre} ${persona.apellido}`
+                    let registroDni = `${persona.dni}`
+
+                    if(this.criterioDeNombre != '' && this.criterioDeDni == ''){
+                        return registroNombreApellido.toLowerCase().includes(this.criterioDeNombre.toLowerCase())
+                    } else if(this.criterioDeDni != '' && this.criterioDeNombre == ''){
+                        return registroDni.toLowerCase().includes(this.criterioDeDni.toLowerCase())
+                    } else{
+                        return registroCompleto.toLowerCase().includes(this.criterioDeNombre.toLowerCase()) && registroCompleto.toLowerCase().includes(this.criterioDeDni.toLowerCase())
+                    }
+                    
+                });
+            }
+        },
+        methods: {
+            getNombreCompleto(persona) {
+                return `${persona.nombre} ${persona.apellido}`
+            }
+        }
+    });
+</script>
